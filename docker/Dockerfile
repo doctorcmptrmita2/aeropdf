@@ -3,13 +3,9 @@
 # ---- builder: install + produce the single-file bundle ----
 FROM node:22-slim AS builder
 WORKDIR /app
-COPY package.json ./
-COPY tsconfig.base.json ./
-COPY packages ./packages
-COPY apps ./apps
-COPY scripts ./scripts
-COPY docs ./docs
-COPY Specs.md proje.md ./
+# Copy the whole repo (heavy/irrelevant paths are excluded by .dockerignore). A single COPY is
+# robust: a missing optional file can't fail the build the way an explicit `COPY <file>` does.
+COPY . .
 ENV PUPPETEER_SKIP_DOWNLOAD=1
 RUN npm install --omit=optional --no-audit --no-fund \
  && npm run build:deploy

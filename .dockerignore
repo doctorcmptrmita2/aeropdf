@@ -5,5 +5,7 @@ deploy
 aeropdf-data
 data
 .git
+.env
+*.log
 *.tsbuildinfo
 AeroPDF_visual_assets
