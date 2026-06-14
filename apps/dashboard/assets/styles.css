@@ -264,6 +264,34 @@ table.data tr:last-child td { border-bottom: none; }
 .badge.fail { background: #fee2e2; color: #b91c1c; }
 .badge.proc { background: #dbeafe; color: #1d4ed8; }
 
+/* ---------- editor ---------- */
+.ed-layout { display: grid; grid-template-columns: 150px 1fr 250px; gap: 16px; }
+.ed-thumbs { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; max-height: 78vh; overflow-y: auto; }
+.ed-thumb { position: relative; border: 2px solid transparent; border-radius: 8px; margin-bottom: 10px; cursor: pointer; overflow: hidden; }
+.ed-thumb.active { border-color: var(--primary); }
+.ed-thumb canvas { width: 100%; display: block; border-radius: 6px; }
+.ed-thumb .n { position: absolute; top: 4px; left: 4px; background: rgba(14,27,61,.8); color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 6px; }
+.ed-thumb .ops { position: absolute; top: 4px; right: 4px; display: flex; gap: 3px; opacity: 0; transition: .15s; }
+.ed-thumb:hover .ops { opacity: 1; }
+.ed-thumb .ops button { border: none; background: rgba(255,255,255,.92); border-radius: 5px; width: 22px; height: 22px; cursor: pointer; font-size: 12px; box-shadow: var(--shadow-sm); }
+
+.ed-stage { background: #eef1f7; border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; text-align: center; max-height: 78vh; overflow: auto; }
+.ed-canvas-wrap { position: relative; display: inline-block; box-shadow: var(--shadow); }
+#edCanvas { display: block; background: #fff; cursor: crosshair; }
+.ed-toolbar { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+.ed-tool { padding: 8px 13px; border: 1px solid var(--border); background: #fff; border-radius: 9px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--navy); }
+.ed-tool.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.ed-hint { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+
+.ed-side .panel { margin-bottom: 14px; }
+.ed-empty { padding: 60px 20px; text-align: center; color: var(--muted); }
+
+.modal-bg { position: fixed; inset: 0; background: rgba(14,27,61,.5); display: none; place-items: center; z-index: 100; }
+.modal-bg.show { display: grid; }
+.modal { background: #fff; border-radius: var(--radius); padding: 22px; width: 420px; box-shadow: var(--shadow-lg); }
+.modal h3 { margin: 0 0 12px; }
+#sigPad { border: 1px dashed var(--primary); border-radius: 10px; background: #fff; touch-action: none; width: 100%; }
+
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .field { margin-bottom: 14px; }
 .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }

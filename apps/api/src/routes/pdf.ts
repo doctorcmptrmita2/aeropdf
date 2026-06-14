@@ -12,6 +12,10 @@ import {
   addWatermark,
   fillForm,
   getInfo,
+  deletePages,
+  rotatePages,
+  reorderPages,
+  addPageNumbers,
 } from "@aeropdf/pdf-engine";
 import { requireApiKey } from "../auth.js";
 import { store } from "../store.js";
@@ -181,6 +185,89 @@ export async function pdfRoutes(app: FastifyInstance): Promise<void> {
         const out = await fillForm(src, fields, Boolean(flatten));
         const info = await getInfo(out);
         const file = await store.saveFile({ bytes: out, filename: "filled.pdf", source: "edited", pages: info.pages });
+        store.completeJob(job.id, { outputFileId: file.id });
+        return { success: true, job_id: job.id, output_file_id: file.id, download_url: downloadUrl(req, file.id) };
+      } catch (e) {
+        const err = e instanceof AeroError ? e : new AeroError("PDF_RENDER_FAILED", (e as Error).message);
+        store.failJob(job.id, err.code, err.message);
+        throw err;
+      }
+    },
+  );
+
+  // ---------------------------------------------------------------- page ops
+  app.post(
+    "/v1/pdf/pages",
+    async (
+      req: FastifyRequest<{
+        Body: { file_id?: string; operation?: string; pages?: number[]; degrees?: number; order?: number[] };
+      }>,
+    ) => {
+      const { file_id, operation, pages, degrees, order } = req.body ?? {};
+      if (!file_id) throw new AeroError("VALIDATION_ERROR", "file_id is required");
+      if (!operation) throw new AeroError("VALIDATION_ERROR", "operation is required (delete|rotate|reorder|number)");
+      const job = store.createJob("pdf.edit", req.body as Record<string, unknown>);
+      try {
+        const src = await store.readFile(file_id);
+        let out: Uint8Array;
+        switch (operation) {
+          case "delete":
+            if (!pages?.length) throw new AeroError("VALIDATION_ERROR", "pages[] required for delete");
+            out = await deletePages(src, pages);
+            break;
+          case "rotate":
+            if (!pages?.length) throw new AeroError("VALIDATION_ERROR", "pages[] required for rotate");
+            out = await rotatePages(src, pages, degrees ?? 90);
+            break;
+          case "reorder":
+            if (!order?.length) throw new AeroError("VALIDATION_ERROR", "order[] required for reorder");
+            out = await reorderPages(src, order);
+            break;
+          case "number":
+            out = await addPageNumbers(src);
+            break;
+          default:
+            throw new AeroError("UNSUPPORTED_OPERATION", `Unknown page operation "${operation}"`);
+        }
+        const info = await getInfo(out);
+        const file = await store.saveFile({ bytes: out, filename: `${operation}.pdf`, source: "edited", pages: info.pages });
+        store.completeJob(job.id, { outputFileId: file.id });
+        return { success: true, job_id: job.id, output_file_id: file.id, pages: info.pages, download_url: downloadUrl(req, file.id) };
+      } catch (e) {
+        const err = e instanceof AeroError ? e : new AeroError("PDF_RENDER_FAILED", (e as Error).message);
+        store.failJob(job.id, err.code, err.message);
+        throw err;
+      }
+    },
+  );
+
+  // ---------------------------------------------------------------- sign
+  app.post(
+    "/v1/pdf/sign",
+    async (
+      req: FastifyRequest<{
+        Body: { file_id?: string; image_base64?: string; page?: number; x?: number; y?: number; width?: number; height?: number };
+      }>,
+    ) => {
+      const { file_id, image_base64, page, x, y, width, height } = req.body ?? {};
+      if (!file_id) throw new AeroError("VALIDATION_ERROR", "file_id is required");
+      if (!image_base64) throw new AeroError("VALIDATION_ERROR", "image_base64 is required");
+      const job = store.createJob("pdf.edit", req.body as Record<string, unknown>);
+      try {
+        const src = await store.readFile(file_id);
+        const out = await applyOverlay(src, [
+          {
+            type: "add_signature",
+            page: page ?? 1,
+            x: x ?? 72,
+            y: y ?? 72,
+            width: width ?? 160,
+            height: height ?? 70,
+            imageBase64: image_base64,
+          },
+        ]);
+        const info = await getInfo(out);
+        const file = await store.saveFile({ bytes: out, filename: "signed.pdf", source: "edited", pages: info.pages });
         store.completeJob(job.id, { outputFileId: file.id });
         return { success: true, job_id: job.id, output_file_id: file.id, download_url: downloadUrl(req, file.id) };
       } catch (e) {

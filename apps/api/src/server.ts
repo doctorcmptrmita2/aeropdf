@@ -41,6 +41,7 @@ export async function buildServer() {
   if (existsSync(config.dashboardDir)) {
     await app.register(fastifyStatic, { root: config.dashboardDir, prefix: "/" });
     app.get("/dashboard", (_req, reply) => reply.sendFile("dashboard.html"));
+    app.get("/editor", (_req, reply) => reply.sendFile("editor.html"));
   } else {
     app.log.warn(`DASHBOARD_DIR not found, static UI disabled: ${config.dashboardDir}`);
     app.get("/", async () => ({ service: "aeropdf", status: "ok", ui: "disabled", api: "/v1, /health" }));

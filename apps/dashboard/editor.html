@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AeroPDF.dev — PDF Editor</title>
+  <link rel="icon" href="assets/logo.svg" />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><img src="assets/logo.svg" alt="AeroPDF.dev" height="34" /></div>
+      <nav>
+        <a href="/dashboard">▦ Dashboard</a>
+        <a class="active" href="/editor">✏️ PDF Editor</a>
+        <a href="/dashboard#files">🗂 Files</a>
+        <a href="/">← Landing</a>
+      </nav>
+      <div class="plan">
+        <b>Visual Editor</b><br/>
+        <span class="muted">Overlay + page ops</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>PDF Editor</h1>
+        <input class="search" id="apiKey" placeholder="API key (Bearer)" value="local-dev-key" />
+      </div>
+
+      <div class="panel">
+        <div class="body" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <input type="file" id="uploadFile" accept="application/pdf" />
+          <button class="btn btn-ghost btn-sm" id="uploadBtn">Upload PDF</button>
+          <span class="muted">veya</span>
+          <select id="tplSelect" style="padding:8px;border:1px solid var(--border);border-radius:9px"></select>
+          <button class="btn btn-ghost btn-sm" id="genBtn">Generate from template</button>
+          <span style="flex:1"></span>
+          <a class="btn btn-primary btn-sm hidden" id="dlBtn" target="_blank">⬇ Download result</a>
+        </div>
+      </div>
+
+      <div id="edEmpty" class="panel"><div class="ed-empty">Bir PDF yükle ya da şablondan üret — sonra düzenlemeye başla.</div></div>
+
+      <div id="edMain" class="hidden">
+        <div class="ed-toolbar">
+          <button class="ed-tool active" data-tool="none">🖐 Select</button>
+          <button class="ed-tool" data-tool="text">T Text</button>
+          <button class="ed-tool" data-tool="signature">✍ Signature</button>
+          <button class="ed-tool" data-tool="stamp">✔ Stamp</button>
+          <button class="ed-tool" data-tool="rect">▭ Box</button>
+          <span style="width:1px;background:var(--border);margin:0 4px"></span>
+          <button class="ed-tool" id="wmBtn">💧 Watermark</button>
+          <button class="ed-tool" id="numBtn"># Page numbers</button>
+        </div>
+        <div class="ed-hint" id="edHint">Bir araç seç, sonra sayfaya tıklayarak yerleştir.</div>
+
+        <div class="ed-layout">
+          <div class="ed-thumbs" id="edThumbs"></div>
+          <div class="ed-stage">
+            <div style="margin-bottom:10px">
+              <button class="btn btn-ghost btn-sm" id="prevPage">‹ Prev</button>
+              <span class="muted" id="pageLabel" style="margin:0 10px">—</span>
+              <button class="btn btn-ghost btn-sm" id="nextPage">Next ›</button>
+            </div>
+            <div class="ed-canvas-wrap"><canvas id="edCanvas"></canvas></div>
+          </div>
+          <div class="ed-side">
+            <div class="panel"><div class="head"><h2>Active file</h2></div>
+              <div class="body" style="font-size:13px">
+                <div class="muted" id="fileInfo">—</div>
+                <div class="result hidden" id="edResult" style="margin-top:10px"></div>
+              </div>
+            </div>
+            <div class="panel"><div class="head"><h2>How it works</h2></div>
+              <div class="body" style="font-size:12.5px;color:var(--muted)">
+                Her işlem orijinali bozmadan üstüne uygulanır (overlay). Sonuç anında render edilir;
+                istediğin an <b>Download result</b> ile indir.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- signature modal -->
+  <div class="modal-bg" id="sigModal">
+    <div class="modal">
+      <h3>İmza çiz</h3>
+      <canvas id="sigPad" width="380" height="160"></canvas>
+      <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+        <button class="btn btn-ghost btn-sm" id="sigClear">Temizle</button>
+        <button class="btn btn-ghost btn-sm" id="sigCancel">İptal</button>
+        <button class="btn btn-primary btn-sm" id="sigUse">Kullan → sayfaya tıkla</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/editor.js" type="module"></script>
+</body>
+</html>
