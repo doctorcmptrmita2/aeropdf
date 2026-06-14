@@ -14,6 +14,18 @@ test("generate invoice from template", async () => {
   assert.ok(r.pages >= 1);
 });
 
+test("invoice renders with date + currency helpers (regression: helper options arg)", async () => {
+  // {{formatDate}} / {{formatCurrency}} get Handlebars' options object as their 2nd arg;
+  // this must not blow up with "Incorrect locale information provided".
+  const r = await generatePdf({ source: "template", templateId: "invoice-basic", data: {
+    invoice_no: "INV-1", invoice_date: "2026-06-14",
+    customer: { name: "Acme", email: "a@b.co" },
+    items: [{ name: "Item", quantity: 1, price: 49 }],
+    subtotal: 49, tax: 4.41, grand_total: 53.41,
+  } });
+  assert.ok(isPdf(r.bytes));
+});
+
 test("overlay text + watermark on generated pdf", async () => {
   const base = await generatePdf({ source: "template", templateId: "report-basic", data: {} });
   const edited = await applyOverlay(base.bytes, [
