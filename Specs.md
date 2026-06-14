@@ -200,10 +200,13 @@ Phase-2 extension point). Responses follow PRD §10.
 
 ### 6.4 Store (`store.ts`)
 
-In-memory `Map`s for jobs/files/keys + on-disk blob storage under `STORAGE_PATH` (default
-`./aeropdf-data`). File records hold `{ id, filename, source, pages, sizeBytes, storagePath,
-createdAt }`. Designed so a Postgres + S3 driver can replace it behind the same interface
-(Phase-2). `getStats()` powers the dashboard cards.
+Disk-backed `Map`s for jobs/files + on-disk blob storage under `STORAGE_PATH` (default
+`./aeropdf-data`). Blobs are written as `<id>.pdf`; the file/job index is persisted to
+`STORAGE_PATH/_index.json` after every mutation and reloaded on startup, so **metadata survives
+restarts** as long as `STORAGE_PATH` is durable (a mounted volume). On load, file records whose
+blob is missing are pruned; job history is capped at 300. File records hold `{ id, filename,
+source, pages, sizeBytes, storagePath, createdAt }`. The interface stays narrow so a Postgres +
+S3 driver can replace it behind it (Phase-2). `getStats()` powers the dashboard cards.
 
 ---
 

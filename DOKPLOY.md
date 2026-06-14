@@ -68,9 +68,9 @@ PDF dosyaları `/data` altına yazılır. Yeniden dağıtımlarda kaybolmaması 
   - **Volume Name:** `aeropdf-data`
   - **Mount Path:** `/data`
 
-> Not (MVP sınırı): Dosya/iş **meta verisi bellekte** tutulur. Konteyner yeniden başlarsa eski
-> `file_id` indirilemez (dosya diskte kalsa da). Kalıcı meta veri için Faz‑2 Postgres gerekir.
-> Dokploy'da hazır **Postgres** servisi eklenebilir (ileride entegre edilecek).
+> ✅ Kalıcılık: Blob'lar **ve** meta veri index'i (`/data/_index.json`) bu volume'da saklanır;
+> böylece yeniden başlatmada eski `file_id`'ler **korunur**. Bu yüzden volume mount **şart**.
+> (Postgres gerekmez; çok-instanslı/HA kurulum istenirse Faz‑2'de eklenebilir.)
 
 ## 6) Domain & SSL
 

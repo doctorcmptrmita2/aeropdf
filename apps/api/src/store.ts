@@ -1,23 +1,55 @@
 import fs from "node:fs/promises";
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { nanoid } from "nanoid";
 import { AeroError, type FileRecord, type FileSource, type Job, type JobType } from "@aeropdf/shared";
 import { config } from "./config.js";
 
 /**
- * In-memory metadata store + on-disk blob storage. The interface is intentionally narrow so a
- * Postgres + S3 driver can replace it in Phase-2 without touching the routes (Specs §6.4).
+ * Disk-backed metadata store + on-disk blob storage. Blobs live under STORAGE_PATH and the
+ * file/job index is persisted to STORAGE_PATH/_index.json, so metadata survives restarts (no
+ * Postgres needed). The interface stays narrow so a Postgres + S3 driver can replace it later.
  */
 
 const DEFAULT_USER = "user_local";
+const MAX_JOBS = 300; // cap the persisted job history
 
 class Store {
   private files = new Map<string, FileRecord>();
   private jobs = new Map<string, Job>();
   private ready: Promise<void>;
+  private indexFile = path.join(config.storagePath, "_index.json");
+  private writeChain: Promise<void> = Promise.resolve();
 
   constructor() {
-    this.ready = fs.mkdir(config.storagePath, { recursive: true }).then(() => undefined);
+    // Synchronous init so the index is available before the first request is served.
+    mkdirSync(config.storagePath, { recursive: true });
+    this.loadIndex();
+    this.ready = Promise.resolve();
+  }
+
+  /** Load the persisted index, pruning file records whose blob no longer exists on disk. */
+  private loadIndex(): void {
+    if (!existsSync(this.indexFile)) return;
+    try {
+      const raw = JSON.parse(readFileSync(this.indexFile, "utf8")) as { files?: FileRecord[]; jobs?: Job[] };
+      for (const f of raw.files ?? []) {
+        if (existsSync(f.storagePath)) this.files.set(f.id, f);
+      }
+      for (const j of raw.jobs ?? []) this.jobs.set(j.id, j);
+    } catch {
+      // Corrupt index → start clean rather than crash.
+    }
+  }
+
+  /** Serialize the index to disk (serialized via a write chain to avoid overlapping writes). */
+  private persist(): void {
+    const files = [...this.files.values()];
+    const jobs = this.listJobs().slice(0, MAX_JOBS);
+    const payload = JSON.stringify({ files, jobs });
+    this.writeChain = this.writeChain
+      .then(() => fs.writeFile(this.indexFile, payload))
+      .catch(() => undefined);
   }
 
   private blobPath(id: string): string {
@@ -50,6 +82,7 @@ class Store {
       createdAt: new Date().toISOString(),
     };
     this.files.set(id, record);
+    this.persist();
     return record;
   }
 
@@ -72,6 +105,7 @@ class Store {
     const f = this.getFile(id);
     await fs.rm(f.storagePath, { force: true });
     this.files.delete(id);
+    this.persist();
   }
 
   listFiles(): FileRecord[] {
@@ -92,6 +126,7 @@ class Store {
       completedAt: null,
     };
     this.jobs.set(job.id, job);
+    this.persist();
     return job;
   }
 
@@ -102,6 +137,7 @@ class Store {
     job.completedAt = new Date().toISOString();
     if (patch.outputFileId) job.outputFileId = patch.outputFileId;
     if (patch.outputFileIds) job.outputFileIds = patch.outputFileIds;
+    this.persist();
     return job;
   }
 
@@ -110,6 +146,7 @@ class Store {
     job.status = "failed";
     job.completedAt = new Date().toISOString();
     job.error = { code, message };
+    this.persist();
     return job;
   }
 
