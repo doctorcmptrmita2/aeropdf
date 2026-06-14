@@ -3,7 +3,11 @@ import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs";
 
 const $ = (id) => document.getElementById(id);
+const KEY = "aeropdf_key";
 const apiKey = () => $("apiKey").value.trim();
+// Restore the key saved in Settings so it persists across pages.
+const savedKey = localStorage.getItem(KEY);
+if (savedKey) $("apiKey").value = savedKey;
 
 let activeFileId = null;
 let pdfDoc = null;
@@ -245,7 +249,7 @@ $("numBtn").addEventListener("click", async () => {
   if (!activeFileId) return showResult("Önce bir PDF aç.", true);
   try { const r = await jsonPost("/v1/pdf/pages", { file_id: activeFileId, operation: "number" }); await loadActive(r.output_file_id, true); showResult("✓ sayfa numaraları eklendi"); } catch (e) { showResult(e.message, true); }
 });
-$("apiKey").addEventListener("change", loadTemplates);
+$("apiKey").addEventListener("change", () => { localStorage.setItem(KEY, apiKey()); loadTemplates(); });
 
 setupSigPad();
 loadTemplates();

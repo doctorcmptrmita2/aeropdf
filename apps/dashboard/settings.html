@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AeroPDF.dev — Settings</title>
+  <link rel="icon" href="assets/logo.svg" />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><img src="assets/logo.svg" alt="AeroPDF.dev" height="34" /></div>
+      <nav>
+        <a href="/dashboard">▦ Dashboard</a>
+        <a href="/editor">✏️ PDF Editor</a>
+        <a href="/dashboard#files">🗂 Files</a>
+        <a class="active" href="/settings">⚙ Settings</a>
+        <a href="/">← Landing</a>
+      </nav>
+      <div class="plan"><b>Settings</b><br/><span class="muted">API key & connection</span></div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar"><h1>Settings</h1></div>
+
+      <div class="panel" style="max-width:680px">
+        <div class="head"><h2>API Key</h2></div>
+        <div class="body">
+          <p class="muted" style="margin-top:0;font-size:13.5px">
+            Buraya girdiğin anahtar tarayıcında saklanır ve Dashboard + PDF Editor tarafından
+            otomatik kullanılır. Sunucudaki <code>AEROPDF_API_KEY</code> ile <b>aynı</b> olmalı.
+          </p>
+          <div class="field">
+            <label>AEROPDF_API_KEY</label>
+            <input id="key" placeholder="örn. 3e7f0296b1c1896390f0cc73fb2f28d58c42122a056956d7" />
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary" id="saveBtn">Kaydet</button>
+            <button class="btn btn-ghost" id="testBtn">Bağlantıyı test et</button>
+            <button class="btn btn-ghost" id="clearBtn">Temizle</button>
+          </div>
+          <div class="result hidden" id="result" style="margin-top:14px"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="max-width:680px">
+        <div class="head"><h2>Server</h2></div>
+        <div class="body" style="font-size:13.5px">
+          <div class="muted" id="serverInfo">checking…</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const KEY = "aeropdf_key";
+    $("key").value = localStorage.getItem(KEY) || "";
+
+    function show(html, err) {
+      const el = $("result");
+      el.className = "result" + (err ? " err" : "");
+      el.innerHTML = html;
+      el.classList.remove("hidden");
+    }
+
+    $("saveBtn").addEventListener("click", () => {
+      const v = $("key").value.trim();
+      localStorage.setItem(KEY, v);
+      show("✓ Anahtar kaydedildi. Dashboard ve Editor artık bunu kullanacak.");
+    });
+    $("clearBtn").addEventListener("click", () => {
+      localStorage.removeItem(KEY);
+      $("key").value = "";
+      show("Anahtar temizlendi.");
+    });
+    $("testBtn").addEventListener("click", async () => {
+      const v = $("key").value.trim();
+      if (!v) return show("Önce bir anahtar gir.", true);
+      try {
+        const r = await fetch("/v1/templates", { headers: { Authorization: `Bearer ${v}` } });
+        if (r.ok) {
+          const b = await r.json();
+          localStorage.setItem(KEY, v);
+          show(`✓ Bağlantı başarılı — ${b.templates?.length ?? 0} şablon bulundu. Anahtar kaydedildi.`);
+        } else if (r.status === 401) {
+          show("✗ 401 — Anahtar sunucudaki AEROPDF_API_KEY ile eşleşmiyor. Dokploy → Environment değerini (tırnaksız, boşluksuz) kontrol edip <b>Deploy</b> et.", true);
+        } else {
+          show(`✗ HTTP ${r.status}`, true);
+        }
+      } catch (e) { show("✗ " + e.message, true); }
+    });
+
+    fetch("/health").then((r) => r.json()).then((h) => {
+      $("serverInfo").innerHTML =
+        `URL: <code>${location.origin}</code><br/>Version: <b>${h.version}</b> · uptime ${h.uptime}s · HTML→PDF: ${h.htmlToPdf ? "browser" : "structured fallback"}`;
+    }).catch(() => { $("serverInfo").textContent = "health alınamadı"; });
+  </script>
+</body>
+</html>

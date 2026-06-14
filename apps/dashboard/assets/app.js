@@ -1,7 +1,11 @@
 /* AeroPDF dashboard — talks to the live API with the bearer key from the top bar. */
 (() => {
   const $ = (id) => document.getElementById(id);
+  const KEY = "aeropdf_key";
   const apiKey = () => $("apiKey").value.trim();
+  // Restore the saved key (set in Settings) so it persists across pages/visits.
+  const savedKey = localStorage.getItem(KEY);
+  if (savedKey) $("apiKey").value = savedKey;
   let activeFileId = null;
   let templates = [];
 
@@ -202,7 +206,7 @@
   $("wmBtn").addEventListener("click", watermark);
   $("stampBtn").addEventListener("click", stamp);
   $("refreshJobs").addEventListener("click", (e) => { e.preventDefault(); refreshAll(); });
-  $("apiKey").addEventListener("change", () => { loadTemplates(); refreshAll(); });
+  $("apiKey").addEventListener("change", () => { localStorage.setItem(KEY, apiKey()); loadTemplates(); refreshAll(); });
 
   loadHealth();
   loadTemplates();
