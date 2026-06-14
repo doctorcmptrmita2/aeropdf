@@ -1,4 +1,6 @@
 # AeroPDF.dev self-hosted engine — multi-stage (bundle the app, ship a slim runtime)
+# Kept at the repo ROOT so the Docker build context is unambiguously the repo root
+# (some platforms, e.g. Dokploy, default the context to the Dockerfile's directory).
 
 # ---- builder: install + produce the single-file bundle ----
 FROM node:22-slim AS builder

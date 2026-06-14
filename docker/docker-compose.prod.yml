@@ -4,7 +4,7 @@ services:
   aeropdf:
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     image: aeropdf/engine:latest
     restart: unless-stopped
     # Bind only to localhost; put Nginx/Caddy in front for TLS (see DEPLOY.md).

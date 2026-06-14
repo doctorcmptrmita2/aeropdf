@@ -3,7 +3,7 @@ services:
   aeropdf:
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     image: aeropdf/engine:latest
     ports:
       - "8080:8080"

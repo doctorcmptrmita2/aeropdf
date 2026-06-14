@@ -31,9 +31,13 @@ git push -u origin main
 ## 2) Build ayarları
 
 - **Build Type:** `Dockerfile`
-- **Docker File Path:** `docker/Dockerfile`
+- **Docker File Path:** `Dockerfile`  ← repo kökündeki Dockerfile (önemli: `docker/Dockerfile` DEĞİL)
 - **Docker Context Path:** `.`  (repo kökü — COPY yolları buna göre)
 - (Build stage gerekmiyor; multi-stage Dockerfile kendi içinde hallediyor.)
+
+> ⚠️ Dockerfile **repo kökünde** durur. Bazı platformlar (Dokploy dahil) build context'i
+> Dockerfile'ın bulunduğu klasör olarak alır; kökte tutarak context'in repo kökü olmasını garanti
+> ederiz. `docker/Dockerfile` verirsen context `docker/` olur ve `package.json` bulunamaz.
 
 ## 3) Environment Variables
 
