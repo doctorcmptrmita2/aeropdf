@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AeroPDF.dev — Dashboard</title>
+  <link rel="icon" href="assets/logo.svg" />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><img src="assets/logo.svg" alt="AeroPDF.dev" height="34" /></div>
+      <nav>
+        <a class="active" href="#">▦ Dashboard</a>
+        <a href="#playground">🧪 PDF Playground</a>
+        <a href="#templates">📐 Templates</a>
+        <a href="#files">🗂 Files</a>
+        <a href="#jobs">📜 Jobs &amp; Logs</a>
+        <a href="#settings">⚙ Settings</a>
+        <a href="/">← Landing</a>
+      </nav>
+      <div class="plan">
+        <b>Local / Self-Hosted</b><br/>
+        <span class="muted">Engine v0.1.0</span><br/>
+        <span class="muted" id="htmlMode">HTML→PDF: checking…</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>Dashboard</h1>
+        <input class="search" id="apiKey" placeholder="API key (Bearer)" value="local-dev-key" />
+      </div>
+
+      <!-- stat cards -->
+      <div class="cards" id="cards">
+        <div class="card"><div class="label">PDFs Generated</div><div class="value" id="stGenerated">—</div><div class="delta">live</div></div>
+        <div class="card"><div class="label">Success Rate</div><div class="value" id="stSuccess">—</div><div class="delta">jobs</div></div>
+        <div class="card"><div class="label">Total Jobs</div><div class="value" id="stJobs">—</div><div class="delta">processed</div></div>
+        <div class="card"><div class="label">Storage Used</div><div class="value" id="stStorage">—</div><div class="delta">local disk</div></div>
+      </div>
+
+      <div class="grid-2">
+        <!-- PDF Playground -->
+        <section class="panel" id="playground">
+          <div class="head"><h2>🧪 PDF Playground</h2><span class="muted">Generate via the live API</span></div>
+          <div class="body">
+            <div class="field">
+              <label>Template</label>
+              <select id="tplSelect"></select>
+            </div>
+            <div class="field">
+              <label>Data (JSON)</label>
+              <textarea id="tplData">{}</textarea>
+            </div>
+            <button class="btn btn-primary" id="genBtn">Generate PDF</button>
+            <button class="btn btn-ghost" id="loadSample">Load sample data</button>
+            <div class="result hidden" id="genResult"></div>
+          </div>
+        </section>
+
+        <!-- Live preview -->
+        <section class="panel">
+          <div class="head"><h2>📄 Preview</h2><a class="btn btn-ghost btn-sm hidden" id="dlBtn" target="_blank">Download</a></div>
+          <div class="body">
+            <iframe class="preview" id="preview" title="PDF preview"></iframe>
+          </div>
+        </section>
+      </div>
+
+      <!-- Quick edit tools -->
+      <section class="panel">
+        <div class="head"><h2>🛠 Quick Tools</h2><span class="muted">Operate on the last generated / uploaded file</span></div>
+        <div class="body">
+          <div class="grid-2">
+            <div>
+              <div class="field"><label>Upload a PDF</label><input type="file" id="uploadFile" accept="application/pdf" /></div>
+              <button class="btn btn-ghost btn-sm" id="uploadBtn">Upload</button>
+            </div>
+            <div>
+              <div class="field"><label>Watermark text (on active file)</label><input id="wmText" placeholder="CONFIDENTIAL" /></div>
+              <button class="btn btn-pdf btn-sm" id="wmBtn">Add Watermark</button>
+              <button class="btn btn-ghost btn-sm" id="stampBtn">Stamp "APPROVED"</button>
+            </div>
+          </div>
+          <div class="result hidden" id="toolResult"></div>
+        </div>
+      </section>
+
+      <!-- Recent jobs -->
+      <section class="panel" id="jobs">
+        <div class="head"><h2>📜 Recent Jobs</h2><a href="#" id="refreshJobs" class="muted">Refresh</a></div>
+        <div class="body" style="padding:0">
+          <table class="data">
+            <thead><tr><th>Job ID</th><th>Type</th><th>Status</th><th>Output</th></tr></thead>
+            <tbody id="jobsBody"><tr><td colspan="4" class="muted" style="padding:18px">No jobs yet — generate a PDF above.</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Files -->
+      <section class="panel" id="files">
+        <div class="head"><h2>🗂 Files</h2><span class="muted" id="fileCount"></span></div>
+        <div class="body" style="padding:0">
+          <table class="data">
+            <thead><tr><th>File ID</th><th>Name</th><th>Source</th><th>Pages</th><th>Size</th><th></th></tr></thead>
+            <tbody id="filesBody"><tr><td colspan="6" class="muted" style="padding:18px">No files yet.</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

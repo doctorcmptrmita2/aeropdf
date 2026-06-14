@@ -1,0 +1,17 @@
+{
+  "name": "@aeropdf/template-engine",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@aeropdf/shared": "*",
+    "handlebars": "^4.7.8",
+    "pdf-lib": "^1.17.1"
+  },
+  "optionalDependencies": {
+    "puppeteer": "^23.10.4"
+  }
+}

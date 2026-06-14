@@ -1,0 +1,29 @@
+# AeroPDF.dev — production (Hostinger VPS)
+# Usage:  AEROPDF_API_KEY=$(openssl rand -hex 24) docker compose -f docker/docker-compose.prod.yml up -d --build
+services:
+  aeropdf:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: aeropdf/engine:latest
+    restart: unless-stopped
+    # Bind only to localhost; put Nginx/Caddy in front for TLS (see DEPLOY.md).
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      AEROPDF_API_KEY: ${AEROPDF_API_KEY:?set a strong AEROPDF_API_KEY}
+      STORAGE_DRIVER: local
+      STORAGE_PATH: /data
+      MAX_UPLOAD_MB: "50"
+      ENABLE_HTML_PDF: "off"
+      NODE_ENV: production
+    volumes:
+      - aeropdf-data:/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  aeropdf-data:

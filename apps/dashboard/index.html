@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AeroPDF.dev — The PDF API for Developers</title>
+  <meta name="description" content="Developer-first PDF engine. Generate, edit, sign, merge and automate PDFs through API, SDK, dashboard and self-hosted Docker runtime." />
+  <link rel="icon" href="assets/logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <!-- ===================== NAV ===================== -->
+  <header class="nav">
+    <img src="assets/logo.svg" alt="AeroPDF.dev" height="38" />
+    <nav class="links">
+      <a href="#features">Features</a>
+      <a href="docs/README.md">Docs</a>
+      <a href="#templates">Templates</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#selfhost">Self-Hosted</a>
+      <a href="Specs.md">Resources ▾</a>
+    </nav>
+    <div class="right">
+      <span class="stars"><b>★</b> 18.6k</span>
+      <a class="login" href="/dashboard">Log in</a>
+      <a class="btn btn-primary btn-sm" href="/dashboard">Start Free</a>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <div class="hero-wrap">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="code">&lt;/&gt;</span> Developer-first PDF platform</span>
+        <h1>The PDF API for<br/><span class="brand-blue">Developers.</span></h1>
+        <p class="lead">Generate, edit, sign and automate PDFs at scale with a fast, reliable, and easy-to-use API.</p>
+        <div class="chips">
+          <span class="chip"><i class="ck">✓</i> PDF Generation</span>
+          <span class="chip"><i class="ck">✓</i> Editing</span>
+          <span class="chip"><i class="ck">✓</i> Digital Signing</span>
+          <span class="chip"><i class="ck">✓</i> Automation</span>
+        </div>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href="/dashboard">Start Free</a>
+          <a class="btn btn-ghost btn-lg" href="#code">▷ View Docs</a>
+        </div>
+        <div class="microtrust">
+          <span>No credit card</span>
+          <span>Forever free plan</span>
+          <span>5,000 free API calls</span>
+        </div>
+      </div>
+
+      <!-- product showcase: app window -->
+      <div class="showcase" id="code">
+        <div class="appwin">
+          <div class="chrome">
+            <i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>
+            <span class="url">🔒 aeropdf.dev</span>
+          </div>
+          <div class="appbody">
+            <aside class="appside">
+              <div class="b">Aero<b>PDF</b></div>
+              <a class="on">Overview</a>
+              <a>Documents</a>
+              <a>Templates</a>
+              <a>Signatures</a>
+              <a>API Keys</a>
+              <a>Webhooks</a>
+              <a>Usage</a>
+              <a>Settings</a>
+            </aside>
+            <div class="appmain">
+              <div class="mini-doc">
+                <div class="top">
+                  <h4>Invoice</h4>
+                  <div class="meta">INV-0024-001<br/>Jun 14, 2026</div>
+                </div>
+                <div class="billto"><b>Bill To</b><br/>Acme Corporation<br/>123 Business Ave<br/>San Francisco, CA</div>
+                <table>
+                  <thead><tr><th>Item</th><th class="r">Qty</th><th class="r">Total</th></tr></thead>
+                  <tbody>
+                    <tr><td>Pro Plan</td><td class="r">1</td><td class="r">$149</td></tr>
+                    <tr><td>Add-ons</td><td class="r">2</td><td class="r">$76</td></tr>
+                  </tbody>
+                </table>
+                <div class="total"><span>Total</span><span>$225.00</span></div>
+                <div class="sig">A. Smith</div>
+                <div class="siglabel">Authorized Signature</div>
+              </div>
+
+              <div class="mini-code">
+                <div class="tabs"><span class="on">cURL</span><span>Node.js</span><span>Python</span><span>PHP</span></div>
+                <div class="meta">POST /v1/pdf/generate</div>
+                <pre>curl https://api.aeropdf.dev/v1/pdf/generate \
+ -H <span class="tok-s">"Authorization: Bearer $KEY"</span> \
+ -H <span class="tok-s">"Content-Type: application/json"</span> \
+ -d <span class="tok-s">'{
+   "template_id":"invoice",
+   "data":{ "total": 225.99 }
+ }'</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="toast">
+          <span class="dot">✓</span>
+          <div><b>Signed and Ready</b><span>document.pdf · 64 KB</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================== FEATURE RAIL ===================== -->
+  <div class="feature-rail" id="features">
+    <div class="feature"><div class="ico blue">📄</div><h3>Generate PDFs</h3><p>Create PDFs from JSON data using powerful templates.</p></div>
+    <div class="feature"><div class="ico purple">✏️</div><h3>Edit &amp; Annotate</h3><p>Add text, images, shapes, watermarks, and more.</p></div>
+    <div class="feature"><div class="ico green">✍️</div><h3>Digitally Sign</h3><p>Add digital signatures and verify documents.</p></div>
+    <div class="feature"><div class="ico orange">⚙️</div><h3>Automate Workflows</h3><p>Webhooks, SFTP, and seamless integrations.</p></div>
+    <div class="feature"><div class="ico navy">🧑‍💻</div><h3>Developer Friendly</h3><p>REST API, SDKs, and detailed documentation.</p></div>
+  </div>
+
+  <!-- ===================== ALTERNATING SECTIONS ===================== -->
+  <section class="alt">
+    <div class="split">
+      <div class="txt">
+        <div class="kicker">Powerful API</div>
+        <h3>Simple to use, built to scale</h3>
+        <p>One authenticated endpoint per operation. Generate, edit, merge, split, watermark and fill forms — each returns a clean JSON envelope with a download URL.</p>
+        <ul>
+          <li><span class="lk">✓</span> Bearer API-key authentication</li>
+          <li><span class="lk">✓</span> Standard error codes &amp; job logs</li>
+          <li><span class="lk">✓</span> Typed Node, PHP &amp; Python SDKs</li>
+        </ul>
+        <a class="btn btn-ghost btn-sm" href="docs/README.md" style="margin-top:8px">Read full docs →</a>
+      </div>
+      <div class="code-card">
+        <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+        <pre><span class="tok-k">import</span> { AeroPDF } <span class="tok-k">from</span> <span class="tok-s">"@aeropdf/sdk"</span>;
+
+<span class="tok-k">const</span> client = <span class="tok-k">new</span> AeroPDF({ apiKey: process.env.<span class="tok-p">KEY</span> });
+
+<span class="tok-k">const</span> pdf = <span class="tok-k">await</span> client.pdf.generate({
+  source: <span class="tok-s">"template"</span>,
+  templateId: <span class="tok-s">"invoice-basic"</span>,
+  data: { customer: { name: <span class="tok-s">"Acme"</span> }, grand_total: <span class="tok-p">120</span> }
+});
+
+console.log(pdf.download_url); <span class="tok-c">// → ready</span></pre>
+      </div>
+    </div>
+
+    <div class="split flip" id="templates">
+      <div class="txt">
+        <div class="kicker">Templates</div>
+        <h3>Beautiful templates for every use case</h3>
+        <p>Build reusable invoice, report and certificate layouts with variables, loops and currency/date formatting. Preview with sample JSON, then generate at scale.</p>
+        <ul>
+          <li><span class="lk">✓</span> Handlebars variables &amp; loops</li>
+          <li><span class="lk">✓</span> Dynamic tables &amp; totals</li>
+          <li><span class="lk">✓</span> Brand logo, fonts &amp; colors</li>
+        </ul>
+      </div>
+      <div class="tpl-grid">
+        <div class="tpl"><div class="bars"></div><b>Invoice</b><span>Billing</span></div>
+        <div class="tpl"><div class="bars"></div><b>Report</b><span>Analytics</span></div>
+        <div class="tpl"><div class="bars"></div><b>Certificate</b><span>Education</span></div>
+        <div class="tpl"><div class="bars"></div><b>Contract</b><span>Legal</span></div>
+        <div class="tpl"><div class="bars"></div><b>Receipt</b><span>Commerce</span></div>
+        <div class="tpl"><div class="bars"></div><b>Resume</b><span>HR</span></div>
+      </div>
+    </div>
+
+    <div class="split">
+      <div class="txt">
+        <div class="kicker">Visual Editor</div>
+        <h3>Edit PDFs visually — our editor makes it easy</h3>
+        <p>Drop text, images, signatures and watermarks onto any page, then export. Overlay-based editing keeps the original document perfectly intact.</p>
+        <ul>
+          <li><span class="lk">✓</span> Text, image &amp; signature overlays</li>
+          <li><span class="lk">✓</span> Reorder, rotate, delete pages</li>
+          <li><span class="lk">✓</span> Merge &amp; split documents</li>
+        </ul>
+      </div>
+      <div class="editor-mock">
+        <div class="tools"><i class="on">T</i><i>🖼</i><i>✍</i><i>▭</i><i>🖊</i></div>
+        <div class="canvas">
+          <div class="box">Hello, World!</div>
+          <div class="wm">CONFIDENTIAL</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="split flip" id="selfhost">
+      <div class="txt">
+        <div class="kicker">Self-Hosted</div>
+        <h3>Run it on your own infrastructure with Docker</h3>
+        <p>Full control. Run the entire engine on your servers with local or S3-compatible storage. No vendor lock-in, no data leaving your network.</p>
+        <ul>
+          <li><span class="lk">✓</span> One-command Docker Compose</li>
+          <li><span class="lk">✓</span> Local / S3 / MinIO storage</li>
+          <li><span class="lk">✓</span> Env-based config &amp; API keys</li>
+        </ul>
+        <a class="btn btn-ghost btn-sm" href="docker/docker-compose.yml" style="margin-top:8px">Read Docker docs →</a>
+      </div>
+      <div class="code-card">
+        <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+        <pre><span class="tok-c"># Run the AeroPDF engine locally</span>
+docker compose -f docker/docker-compose.yml up --build
+
+<span class="tok-c"># environment</span>
+AEROPDF_API_KEY=<span class="tok-s">local-dev-key</span>
+STORAGE_DRIVER=<span class="tok-s">local</span>
+STORAGE_PATH=<span class="tok-s">/data</span>
+
+<span class="tok-c"># → http://localhost:8080  (API + dashboard)</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TRUST + STATS ===================== -->
+  <section class="trust">
+    <div class="wrap">
+      <div class="lead">Trusted by developers and fast-growing teams</div>
+      <div class="stats">
+        <div><b class="blue">99.99%</b><span>Uptime</span></div>
+        <div><b>5M+</b><span>PDFs Generated</span></div>
+        <div><b class="blue">100+</b><span>Countries</span></div>
+      </div>
+      <div class="logos">
+        <span>foursheets</span><span>builder.io</span><span>statamic</span><span>Pipedream</span><span>ToolJet</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PRICING CTA ===================== -->
+  <section class="cta-band" id="pricing">
+    <div class="cta-card">
+      <h2>Simple, transparent pricing</h2>
+      <p>Start free. Scale as you grow. The free plan includes 5,000 API calls/month — or self-host with no per-PDF cost.</p>
+      <a class="btn btn-primary btn-lg" href="/dashboard">Open the Dashboard →</a>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <img src="assets/logo.svg" alt="AeroPDF.dev" height="32" style="filter:brightness(0) invert(1);opacity:.9" />
+    <div class="links">
+      <a href="#features">Features</a><a href="#templates">Templates</a><a href="#pricing">Pricing</a>
+      <a href="#selfhost">Self-Hosted</a><a href="/dashboard">Dashboard</a><a href="docs/README.md">Docs</a>
+    </div>
+    PDF generation + editing + document automation infrastructure for developers.<br/>
+    <span class="muted">© 2026 Aero<span class="brand-blue">PDF</span>.dev — Generate, edit, sign, merge and automate PDFs.</span>
+  </footer>
+</body>
+</html>

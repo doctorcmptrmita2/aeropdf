@@ -1,0 +1,10 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/shared" },
+    { "path": "packages/pdf-engine" },
+    { "path": "packages/template-engine" },
+    { "path": "packages/sdk-node" },
+    { "path": "apps/api" }
+  ]
+}

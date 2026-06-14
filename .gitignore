@@ -1,0 +1,8 @@
+node_modules/
+dist/
+deploy/
+*.tsbuildinfo
+aeropdf-data/
+data/
+.env
+.DS_Store

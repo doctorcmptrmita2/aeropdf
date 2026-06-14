@@ -1,0 +1,9 @@
+node_modules
+**/node_modules
+**/dist
+deploy
+aeropdf-data
+data
+.git
+*.tsbuildinfo
+AeroPDF_visual_assets
