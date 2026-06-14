@@ -26,10 +26,14 @@ const jsonPost = (path, payload) =>
   api(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
 
 function showResult(html, isErr) {
-  const el = $("edResult");
-  el.className = "result" + (isErr ? " err" : "");
-  el.innerHTML = html;
-  el.classList.remove("hidden");
+  // Write to the always-visible top status banner AND the side panel (when present).
+  for (const id of ["edStatus", "edResult"]) {
+    const el = $(id);
+    if (!el) continue;
+    el.className = "result" + (isErr ? " err" : "");
+    el.innerHTML = html;
+    el.classList.remove("hidden");
+  }
 }
 
 async function fetchBlob(fileId) {
@@ -196,7 +200,9 @@ async function loadTemplates() {
     const { templates: t } = await api("/v1/templates");
     templates = t;
     $("tplSelect").innerHTML = t.map((x) => `<option value="${x.id}">${x.name}</option>`).join("");
-  } catch { /* ignore */ }
+  } catch (e) {
+    showResult(`API anahtarı geçersiz görünüyor — sağ üstteki alana doğru <b>AEROPDF_API_KEY</b> değerini gir. (${e.message})`, true);
+  }
 }
 
 async function generate() {
