@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
@@ -35,8 +36,15 @@ export async function buildServer() {
   await app.register(fileRoutes);
 
   // Static dashboard + landing (served last so /v1 + /health win).
-  await app.register(fastifyStatic, { root: config.dashboardDir, prefix: "/" });
-  app.get("/dashboard", (_req, reply) => reply.sendFile("dashboard.html"));
+  // Guard: if the assets dir is missing (misconfigured DASHBOARD_DIR), keep the API alive
+  // instead of failing the whole server — @fastify/static throws when root doesn't exist.
+  if (existsSync(config.dashboardDir)) {
+    await app.register(fastifyStatic, { root: config.dashboardDir, prefix: "/" });
+    app.get("/dashboard", (_req, reply) => reply.sendFile("dashboard.html"));
+  } else {
+    app.log.warn(`DASHBOARD_DIR not found, static UI disabled: ${config.dashboardDir}`);
+    app.get("/", async () => ({ service: "aeropdf", status: "ok", ui: "disabled", api: "/v1, /health" }));
+  }
 
   return app;
 }
